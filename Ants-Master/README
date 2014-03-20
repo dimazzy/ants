@@ -1,0 +1,13 @@
+github: https://github.com/asoolep/ants
+
+idee on raamatust: Turtles, Termites and Traffic Jams
+http://www.amazon.com/Turtles-Termites-Traffic-Jams-Explorations/dp/0262680939
+
+TODO: 	1) teha kasutajaliides javaFX'iga
+	2) teha sipelgapesa keskele, kust sipelgad välja tulevad
+	3) panna sipelgad toitu otsima ja toitu koju tassima
+		(kõigepealt liiguvad vastu feromooni gradienti
+		kui toit on käes, jätavad maha teistsuguse jälje
+		ja liiguvad mööda esialgset gradienti
+	4) sättida gradienti ja liikumist nii, et sipelgad võimalikult
+		efektiivselt seda teeksid
