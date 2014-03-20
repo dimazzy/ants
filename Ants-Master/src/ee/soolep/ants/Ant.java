@@ -2,7 +2,7 @@ package ee.soolep.ants;
 
 import java.util.Random;
 
-//
+//asdf
 public class Ant extends Entity{
 
     public static final int minLength = 1;
