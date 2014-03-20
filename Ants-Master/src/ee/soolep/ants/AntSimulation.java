@@ -13,7 +13,7 @@ import javax.swing.JMenuItem;
 @SuppressWarnings("serial")
 public class AntSimulation extends JFrame implements Runnable{
 
-    public static final int WIDTH = 200;
+    public static final int WIDTH = 300;
     public static final int HEIGHT = 200;
     public static final int BOX_SIZE = 4;
     private int width = WIDTH * BOX_SIZE;
