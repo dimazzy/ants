@@ -41,7 +41,7 @@ public class AntSimulation extends Application {
         random.setSeed(System.nanoTime());
         ants = new LinkedList<Ant>();
         for (int i = 0; i < numAnts; i++)
-            ants.add(new Ant(random.nextInt(width - 4) + 2, random.nextInt(height - 4) + 2));
+            ants.add(new Ant(random.nextInt(width - 4) + 2, random.nextInt(height - 4) + 2, cellSize));
     }
 
     private void makeCells() {
