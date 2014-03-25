@@ -11,7 +11,7 @@ public class Cell {
     public final Rectangle rect;
 
     public static final int maxPheromone = 200;
-    public static final int evaporation = 3;
+    public static final int evaporation = 5;
 
     private int searchPheromone;
 

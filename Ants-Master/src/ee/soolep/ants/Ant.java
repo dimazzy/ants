@@ -10,6 +10,9 @@ public class Ant {
     public final int cellSize;
     public final Rectangle rect;
 
+    private boolean isSearching;
+    private boolean hasFood;
+
     /** Class constructor
      * @param x location on x axis
      * @param y location on y axis
@@ -18,7 +21,7 @@ public class Ant {
         this.x = x;
         this.y = y;
         this.cellSize = cellSize;
-        this.rect = new Rectangle(x, y, cellSize, cellSize);
+        this.rect = new Rectangle(x * cellSize, y * cellSize, cellSize, cellSize);
         this.rect.setFill(Color.ALICEBLUE);
     }
 

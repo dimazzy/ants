@@ -1,15 +1,22 @@
 package ee.soolep.ants;
 
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-@SuppressWarnings("serial")
 public class AntSimulation extends Application {
 
     public static final int width = 100;
@@ -21,12 +28,42 @@ public class AntSimulation extends Application {
     Nest nest;
     private int numAnts = 10;
     Random random;
+
     Group root;
+    Scene scene;
 
     @Override
     public void start(Stage stage) throws Exception {
         initialize();
+        mainLoop();
 
+        stage.setTitle("ants");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void mainLoop() {
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(Animation.INDEFINITE);
+
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.5), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                updateCells();
+                for (Ant ant : ants) ant.update();
+            }
+        });
+
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.play();
+    }
+
+    private void updateCells() {
+        for (int i = 0; i < width; i++){
+            for (int j = 0; j < height; j++){
+                cells[i][j].update();
+            }
+        }
     }
 
     private void initialize() {
@@ -35,6 +72,7 @@ public class AntSimulation extends Application {
         makeCells();
         nest = new Nest((int) width / 2, (int) height / 2, cellSize);
         makeAnts();
+        scene = new Scene(root, width * cellSize, height * cellSize, Color.BLACK);
     }
 
     private void makeAnts() {
@@ -42,6 +80,8 @@ public class AntSimulation extends Application {
         ants = new LinkedList<Ant>();
         for (int i = 0; i < numAnts; i++)
             ants.add(new Ant(random.nextInt(width - 4) + 2, random.nextInt(height - 4) + 2, cellSize));
+        for (Ant ant : ants)
+            root.getChildren().add(ant.rect);
     }
 
     private void makeCells() {
@@ -56,7 +96,7 @@ public class AntSimulation extends Application {
     }
 
     public static void main(String[] args){
-        new AntSimulation();
+        launch(args);
     }
 
 }
