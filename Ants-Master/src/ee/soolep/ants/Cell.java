@@ -1,41 +1,44 @@
 package ee.soolep.ants;
 
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
 public class Cell {
 
-    private int x;
-    private int y;
-    public static final int MIN_PHEROMONE = 3;
-    public static final int MAX_PHEROMONE = 200;
-    private int pheromone;
+    public final int x;
+    public final int y;
+    public final int cellSize;
+    public final Rectangle rect;
 
-    public Cell(int x, int y) {
+    public static final int maxPheromone = 200;
+    public static final int evaporation = 3;
+
+    private int searchPheromone;
+
+    public Cell(int x, int y, int cellSize) {
         this.x = x;
         this.y = y;
-        this.pheromone = 0;
+        this.cellSize = cellSize;
+        this.rect = new Rectangle(x * cellSize, y * cellSize, cellSize, cellSize);
+        this.searchPheromone = 200;
     }
 
     /** update method
-     * subtracts 1 from pheromone
-     * limits pheromone to 200
+     * subtracts evaporation from pheromones
+     * limits pheromones to 200
+     * sets color
      */
     public void update(){
-        if (this.pheromone > MIN_PHEROMONE) this.pheromone -= 0.1;
-        if (this.pheromone > MAX_PHEROMONE) this.pheromone = MAX_PHEROMONE;
+        if (searchPheromone > maxPheromone) searchPheromone = maxPheromone;
+        if (searchPheromone > 3) searchPheromone -= evaporation;
+        rect.setFill(Color.rgb(0, searchPheromone, 0));
     }
 
-    public int getPheromone() {
-        return pheromone;
+    /** adds pheromones from visiting ant
+     * @param ant that is on the cell
+     */
+    public void visit(Ant ant){
+
     }
 
-    public void setPheromone(int pheromone) {
-        this.pheromone = pheromone;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
 }
