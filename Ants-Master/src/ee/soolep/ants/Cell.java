@@ -12,7 +12,8 @@ public class Cell {
     public boolean hasFood;
 
     public static final int maxPheromone = 200;
-    public static final int evaporation = 1;
+    public static final double evaporation = 0.1;
+    public static final double foodEvaporation = 0.01;
 
     private int searchPheromone;
     private int foodPheromone;
@@ -35,8 +36,9 @@ public class Cell {
         if (searchPheromone > maxPheromone) searchPheromone = maxPheromone;
         if (searchPheromone > 3) searchPheromone -= evaporation;
         if (foodPheromone > maxPheromone) foodPheromone = maxPheromone;
-        if (foodPheromone > 3) foodPheromone -= evaporation;
-        rect.setFill(Color.rgb(0, searchPheromone, foodPheromone));
+        if (foodPheromone > 3) foodPheromone -= foodEvaporation;
+        if (hasFood) foodPheromone = 210;
+        rect.setFill(Color.rgb(0, (int)searchPheromone, (int)foodPheromone));
     }
 
     /** adds pheromones from visiting ant
@@ -44,10 +46,10 @@ public class Cell {
      */
     public void visit(Ant ant){
         if (ant.isSearching()) {
-            this.searchPheromone += ant.getEnergy();
+            this.searchPheromone += ant.getEnergy() / 60;
         }
         if (ant.hasFood()) {
-            this.foodPheromone += 100;
+            this.foodPheromone += ant.getEnergy() / 20;
         }
         if (hasFood) ant.foundFood();
     }

@@ -14,6 +14,7 @@ public class Nest {
     public final int x;
     public final int y;
     public final Rectangle rect;
+    private int antCount;
 
     private int foodCount;
     Random random;
@@ -23,6 +24,7 @@ public class Nest {
         this.y = y;
         this.cellSize = cellSize;
         random = new Random();
+        antCount = 0;
         this.rect = new Rectangle(x * cellSize, y * cellSize, cellSize, cellSize);
         this.rect.setFill(Color.CYAN);
         this.foodCount = 0;
@@ -38,6 +40,8 @@ public class Nest {
     }
 
     public Ant newAnt(){
+        antCount++;
+
         return new Ant(x, y, cellSize, this);
     }
 }

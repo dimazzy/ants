@@ -12,11 +12,10 @@ public class Ant {
     public final int cellSize;
     private Cell cell;
     private int energy;
-    private int age;
 
     private Nest nest;
 
-    public static final int maxLength = 2;
+    public static final int maxLength = 3;
     public final Rectangle rect;
     Random random;
 
@@ -36,18 +35,18 @@ public class Ant {
         this.rect.setFill(Color.ALICEBLUE);
         this.searching = true;
         this.food = false;
-        this.energy = 200;
+        this.energy = 800;
         this.random = new Random();
-        this.age = 0;
     }
 
     public void update(Cell[][] cells){
-        this.energy--;
+        if (energy > 800) energy = 800;
+        //this.rect.setFill(Color.rgb(255 -this.energy / 4, 55, 55));
+        this.energy -= 0.1;
         cell = cells[this.x][this.y];
         cell.visit(this);
-        if (food && this.x == nest.x && this.y == nest.y){
-            this.searching = true;
-            this.food = false;
+        if (food && nest.x == x && nest.y == y) {
+            this.deliveredFood();
             nest.addFood();
         }
         move(observe(cells));
@@ -90,17 +89,18 @@ public class Ant {
         int direction = Direction.NO_DIR;
         if (searching){
             if (getFoodPheromoneDirection(cells) == Direction.NO_DIR){
-                if (random.nextBoolean()) direction = random.nextInt(4);
+                random.setSeed(System.nanoTime());
+                if (random.nextBoolean())
+                    direction = random.nextInt(4);
                 else direction = oppositeDirection(getSearchPheromoneDirection(cells));
             } else {
-                direction = getFoodPheromoneDirection(cells);
+                direction = getLeastSearchPheromoneDirection(cells);
             }
         } else if(food){
-            if (getSearchPheromoneDirection(cells) == Direction.NO_DIR) {
+            if (getSearchPheromoneDirection(cells) == Direction.NO_DIR)
                 direction = random.nextInt(4);
-            } else {
-                direction = getSearchPheromoneDirection(cells);
-            }
+            else  direction = getSearchPheromoneDirection(cells);
+
         }
         if (direction == Direction.NO_DIR) direction = random.nextInt(4);
         return direction;
@@ -130,6 +130,19 @@ public class Ant {
         if (south > north && south > west && south > east) direction = Direction.SOUTH;
         if (west  > north && west  > east && west > south) direction = Direction.WEST;
         if (east  > north && east  > west && east > south) direction = Direction.EAST;
+        return direction;
+    }
+
+    private int getLeastSearchPheromoneDirection(Cell[][] cells){
+        int direction = Direction.NO_DIR;
+        int north = cells[x][y - 1].getSearchPheromone();
+        int south = cells[x][y + 1].getSearchPheromone();
+        int west  = cells[x - 1][y].getSearchPheromone();
+        int east  = cells[x + 1][y].getSearchPheromone();
+        if (north < south && north < west && north < east) direction = Direction.NORTH;
+        if (south < north && south < west && south < east) direction = Direction.SOUTH;
+        if (west  < north && west  < east && west  < south) direction = Direction.WEST;
+        if (east  < north && east  < west && east  < south) direction = Direction.EAST;
         return direction;
     }
 
@@ -166,6 +179,12 @@ public class Ant {
     public void foundFood() {
         this.food = true;
         this.searching = false;
-        this.energy += 200;
+        this.energy += 800;
+    }
+
+    public void deliveredFood() {
+        this.food = false;
+        this.searching = true;
+        this.energy += 800;
     }
 }
