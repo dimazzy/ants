@@ -23,8 +23,8 @@ public class Nest {
         this.y = y;
         this.cellSize = cellSize;
         random = new Random();
-        this.rect = new Rectangle(x, y, cellSize, cellSize);
-        this.rect.setFill(Color.AQUAMARINE);
+        this.rect = new Rectangle(x * cellSize, y * cellSize, cellSize, cellSize);
+        this.rect.setFill(Color.CYAN);
         this.foodCount = 0;
     }
 
@@ -32,12 +32,13 @@ public class Nest {
         return foodCount;
     }
 
-    public void update() {
-        this.rect.setFill(Color.RED);
+    public void addFood(){
+        this.foodCount++;
+        System.out.println("food in nest: " + foodCount);
     }
 
     public Ant newAnt(){
-        return new Ant(x, y, cellSize);
+        return new Ant(x, y, cellSize, this);
     }
 }
 

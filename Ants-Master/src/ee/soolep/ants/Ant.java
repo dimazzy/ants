@@ -12,41 +12,50 @@ public class Ant {
     public final int cellSize;
     private Cell cell;
     private int energy;
+    private int age;
 
-    public static final int maxLength = 5;
+    private Nest nest;
+
+    public static final int maxLength = 2;
     public final Rectangle rect;
     Random random;
 
-    private int searchPheromone = 1000;
-    private boolean searching;
-    private boolean food;
-    private int previousDirection;
+    boolean searching;
+    boolean food;
 
     /** Class constructor
      * @param x location on x axis
      * @param y location on y axis
      */
-    public Ant(int x, int y, int cellSize) {
+    public Ant(int x, int y, int cellSize, Nest nest) {
         this.x = x;
         this.y = y;
+        this.nest = nest;
         this.cellSize = cellSize;
         this.rect = new Rectangle(x * cellSize, y * cellSize, cellSize, cellSize);
         this.rect.setFill(Color.ALICEBLUE);
         this.searching = true;
+        this.food = false;
         this.energy = 200;
+        this.random = new Random();
+        this.age = 0;
     }
 
     public void update(Cell[][] cells){
+        this.energy--;
         cell = cells[this.x][this.y];
         cell.visit(this);
-
+        if (food && this.x == nest.x && this.y == nest.y){
+            this.searching = true;
+            this.food = false;
+            nest.addFood();
+        }
         move(observe(cells));
     }
 
     private void move(int direction) {
         random = new Random();
         int length = random.nextInt(maxLength);
-        direction = random.nextInt(4);
         switch (direction){
             case Direction.NORTH:
                 this.y -= length;
@@ -81,27 +90,34 @@ public class Ant {
         int direction = Direction.NO_DIR;
         if (searching){
             if (getFoodPheromoneDirection(cells) == Direction.NO_DIR){
-                switch(getSearchPheromoneDirection(cells)){
-                    case Direction.SOUTH:
-                        direction = Direction.NORTH;
-                        break;
-                    case Direction.NORTH:
-                        direction = Direction.SOUTH;
-                        break;
-                    case Direction.EAST:
-                        direction = Direction.WEST;
-                        break;
-                    case Direction.WEST:
-                        direction = Direction.EAST;
-                        break;
-                }
+                if (random.nextBoolean()) direction = random.nextInt(4);
+                else direction = oppositeDirection(getSearchPheromoneDirection(cells));
             } else {
                 direction = getFoodPheromoneDirection(cells);
             }
-        } else {
-            direction = getSearchPheromoneDirection(cells);
+        } else if(food){
+            if (getSearchPheromoneDirection(cells) == Direction.NO_DIR) {
+                direction = random.nextInt(4);
+            } else {
+                direction = getSearchPheromoneDirection(cells);
+            }
         }
+        if (direction == Direction.NO_DIR) direction = random.nextInt(4);
         return direction;
+    }
+
+    private int oppositeDirection(int direction){
+        switch (direction){
+            case Direction.EAST:
+                return Direction.WEST;
+            case Direction.WEST:
+                return Direction.EAST;
+            case Direction.NORTH:
+                return Direction.SOUTH;
+            case Direction.SOUTH:
+                return Direction.NORTH;
+        }
+        return Direction.NO_DIR;
     }
 
     private int getFoodPheromoneDirection(Cell[][] cells){
@@ -138,14 +154,6 @@ public class Ant {
         return food;
     }
 
-    public int getY() {
-        return y;
-    }
-
-    public int getX() {
-        return x;
-    }
-
     public int getEnergy(){
         return energy;
     }
@@ -153,5 +161,11 @@ public class Ant {
     @Override
     public String toString(){
         return "ant[" + this.x + ", " + this.y + "]";
+    }
+
+    public void foundFood() {
+        this.food = true;
+        this.searching = false;
+        this.energy += 200;
     }
 }

@@ -20,16 +20,16 @@ import java.util.Random;
 
 public class AntSimulation extends Application {
 
-    public static final int width = 50;
-    public static final int height = 50;
-    public static final int cellSize = 6;
+    public static final int width = 30;
+    public static final int height = 30;
+    public static final int cellSize = 10;
 
     List<Ant> ants;
     Iterator<Ant> antIterator;
     Cell[][] cells;
     Nest nest;
     List<Food> foods;
-    private int foodCount = 5;
+    private int foodCount = 1;
     private int numAnts = 10;
     Random random;
 
@@ -50,15 +50,14 @@ public class AntSimulation extends Application {
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.03), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 updateCells();
                 while (antIterator.hasNext()){
                     Ant ant = antIterator.next();
-                    if (ant.getEnergy() < 0){
+                    if (ant.getEnergy() < 3){
                         antIterator.remove();
-                        System.out.println("ant died :(");
                     }
                     ant.update(cells);
                 }
@@ -66,7 +65,6 @@ public class AntSimulation extends Application {
                     ants.add(nest.newAnt());
                 }
                 antIterator = ants.iterator();
-                nest.update();
             }
         });
 
@@ -86,10 +84,14 @@ public class AntSimulation extends Application {
         random = new Random();
         root = new Group();
         makeCells();
-        nest = new Nest((int) width / 2, (int) height / 2, cellSize);
+        nest = new Nest(width / 3, height / 3, cellSize);
         makeAnts();
         scene = new Scene(root, width * cellSize, height * cellSize, Color.BLACK);
-        makeFood();
+        Food food = new Food((width / 3) * 2, (height / 3) * 2, cellSize);
+        root.getChildren().add(food.rect);
+        cells[food.x][food.y].hasFood = true;
+        //makeFood();
+        root.getChildren().add(nest.rect);
     }
 
     private void makeFood() {
@@ -107,7 +109,7 @@ public class AntSimulation extends Application {
         random.setSeed(System.nanoTime());
         ants = new LinkedList<Ant>();
         for (int i = 0; i < numAnts; i++) {
-            Ant ant = new Ant(width / 2, height / 2, cellSize);
+            Ant ant = new Ant(width / 2, height / 2, cellSize, nest);
             System.out.println(ant);
             ants.add(ant);
         }

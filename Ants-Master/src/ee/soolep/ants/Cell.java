@@ -44,12 +44,12 @@ public class Cell {
      */
     public void visit(Ant ant){
         if (ant.isSearching()) {
-            this.searchPheromone += 100;
+            this.searchPheromone += ant.getEnergy();
         }
         if (ant.hasFood()) {
             this.foodPheromone += 100;
         }
-        if (hasFood) System.out.println(ant + " found food :)");
+        if (hasFood) ant.foundFood();
     }
 
     public int getSearchPheromone(){
