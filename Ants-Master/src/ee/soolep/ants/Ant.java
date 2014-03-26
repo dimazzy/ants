@@ -11,6 +11,7 @@ public class Ant {
     private int y;
     public final int cellSize;
     private Cell cell;
+    private int energy;
 
     public static final int maxLength = 3;
     public final Rectangle rect;
@@ -32,6 +33,7 @@ public class Ant {
         this.rect = new Rectangle(x * cellSize, y * cellSize, cellSize, cellSize);
         this.rect.setFill(Color.ALICEBLUE);
         this.searching = true;
+        this.energy = 200;
     }
 
     public void update(Cell[][] cells){
@@ -69,6 +71,7 @@ public class Ant {
         checkBorders(this.x, this.y);
         this.rect.setX(this.x * cellSize);
         this.rect.setY(this.y * cellSize);
+        this.energy -= length;
     }
 
     private void checkBorders(int x, int y) {
@@ -115,6 +118,10 @@ public class Ant {
 
     public int getX() {
         return x;
+    }
+
+    public int getEnergy(){
+        return energy;
     }
 
     @Override

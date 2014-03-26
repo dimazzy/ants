@@ -50,7 +50,14 @@ public class AntSimulation extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 updateCells();
-                for (Ant ant : ants) ant.update(cells);
+                for (Ant ant : ants) {
+                    ant.update(cells);
+                    if (ant.getEnergy() > 0) {
+                        ants.remove(ant);
+                        System.out.println("ant died");
+                        ants.add(new Ant(width / 2, height / 2, cellSize));
+                    }
+                }
                 nest.update();
             }
         });
