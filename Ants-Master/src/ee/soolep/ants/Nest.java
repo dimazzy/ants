@@ -13,14 +13,10 @@ public class Nest {
     public final int cellSize;
     public final int x;
     public final int y;
-
     public final Rectangle rect;
+
+    private int foodCount;
     Random random;
-
-    public static final int maxPheromone = 200;
-    public static final int evaporation = 3;
-
-    private int searchPheromone;
 
     public Nest(int x, int y, int cellSize) {
         this.x = x;
@@ -29,5 +25,14 @@ public class Nest {
         random = new Random();
         this.rect = new Rectangle(x, y, cellSize, cellSize);
         this.rect.setFill(Color.AQUAMARINE);
+        this.foodCount = 0;
+    }
+
+    public int getFoodCount(){
+        return foodCount;
+    }
+
+    public void update() {
+        this.rect.setFill(Color.RED);
     }
 }

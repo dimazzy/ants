@@ -46,11 +46,12 @@ public class AntSimulation extends Application {
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.5), new EventHandler<ActionEvent>() {
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.02), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 updateCells();
-                for (Ant ant : ants) ant.update();
+                for (Ant ant : ants) ant.update(cells);
+                nest.update();
             }
         });
 
@@ -78,10 +79,12 @@ public class AntSimulation extends Application {
     private void makeAnts() {
         random.setSeed(System.nanoTime());
         ants = new LinkedList<Ant>();
-        for (int i = 0; i < numAnts; i++)
-            ants.add(new Ant(random.nextInt(width - 4) + 2, random.nextInt(height - 4) + 2, cellSize));
-        for (Ant ant : ants)
+        for (int i = 0; i < numAnts; i++) {
+            Ant ant = new Ant(width / 2, height / 2, cellSize);
+            System.out.println(ant);
+            ants.add(ant);
             root.getChildren().add(ant.rect);
+        }
     }
 
     private void makeCells() {
