@@ -35,4 +35,9 @@ public class Nest {
     public void update() {
         this.rect.setFill(Color.RED);
     }
+
+    public Ant newAnt(){
+        return new Ant(x, y, cellSize);
+    }
 }
+

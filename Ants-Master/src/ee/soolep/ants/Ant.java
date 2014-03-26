@@ -13,7 +13,7 @@ public class Ant {
     private Cell cell;
     private int energy;
 
-    public static final int maxLength = 3;
+    public static final int maxLength = 5;
     public final Rectangle rect;
     Random random;
 
@@ -44,10 +44,6 @@ public class Ant {
     }
 
     private void move(int direction) {
-        int newX = this.x;
-        int newY = this.y;
-        int dx = 0;
-        int dy = 0;
         random = new Random();
         int length = random.nextInt(maxLength);
         direction = random.nextInt(4);
@@ -82,26 +78,56 @@ public class Ant {
     }
 
     private int observe(Cell[][] cells) {
-        int direction = 0;
+        int direction = Direction.NO_DIR;
         if (searching){
-            direction = searchFood(cells);
+            if (getFoodPheromoneDirection(cells) == Direction.NO_DIR){
+                switch(getSearchPheromoneDirection(cells)){
+                    case Direction.SOUTH:
+                        direction = Direction.NORTH;
+                        break;
+                    case Direction.NORTH:
+                        direction = Direction.SOUTH;
+                        break;
+                    case Direction.EAST:
+                        direction = Direction.WEST;
+                        break;
+                    case Direction.WEST:
+                        direction = Direction.EAST;
+                        break;
+                }
+            } else {
+                direction = getFoodPheromoneDirection(cells);
+            }
         } else {
-            direction = deliverFood(cells);
+            direction = getSearchPheromoneDirection(cells);
         }
         return direction;
     }
 
-    private int deliverFood(Cell[][] cells) {
-        return 0;
+    private int getFoodPheromoneDirection(Cell[][] cells){
+        int direction = Direction.NO_DIR;
+        int north = cells[x][y - 1].getFoodPheromone();
+        int south = cells[x][y + 1].getFoodPheromone();
+        int west  = cells[x - 1][y].getFoodPheromone();
+        int east  = cells[x + 1][y].getFoodPheromone();
+        if (north > south && north > west && north > east) direction = Direction.NORTH;
+        if (south > north && south > west && south > east) direction = Direction.SOUTH;
+        if (west  > north && west  > east && west > south) direction = Direction.WEST;
+        if (east  > north && east  > west && east > south) direction = Direction.EAST;
+        return direction;
     }
 
-    private int searchFood(Cell[][] cells) {
-        int north = 0;
-        int south = 0;
-        int west = 0;
-        int east = 0;
-
-        return 0;
+    private int getSearchPheromoneDirection(Cell[][] cells){
+        int direction = Direction.NO_DIR;
+        int north = cells[x][y - 1].getSearchPheromone();
+        int south = cells[x][y + 1].getSearchPheromone();
+        int west  = cells[x - 1][y].getSearchPheromone();
+        int east  = cells[x + 1][y].getSearchPheromone();
+        if (north > south && north > west && north > east) direction = Direction.NORTH;
+        if (south > north && south > west && south > east) direction = Direction.SOUTH;
+        if (west  > north && west  > east && west > south) direction = Direction.WEST;
+        if (east  > north && east  > west && east > south) direction = Direction.EAST;
+        return direction;
     }
 
     public boolean isSearching(){
